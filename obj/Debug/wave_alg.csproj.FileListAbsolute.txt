@@ -1,0 +1,10 @@
+C:\Users\Niko\Desktop\АКиТП курсач\wave_alg_v0.0.1\wave_alg\bin\Debug\wave_alg.exe.config
+C:\Users\Niko\Desktop\АКиТП курсач\wave_alg_v0.0.1\wave_alg\bin\Debug\wave_alg.exe
+C:\Users\Niko\Desktop\АКиТП курсач\wave_alg_v0.0.1\wave_alg\bin\Debug\wave_alg.pdb
+C:\Users\Niko\Desktop\АКиТП курсач\wave_alg_v0.0.1\wave_alg\obj\Debug\wave_alg.csprojAssemblyReference.cache
+C:\Users\Niko\Desktop\АКиТП курсач\wave_alg_v0.0.1\wave_alg\obj\Debug\wave_alg.Form1.resources
+C:\Users\Niko\Desktop\АКиТП курсач\wave_alg_v0.0.1\wave_alg\obj\Debug\wave_alg.Properties.Resources.resources
+C:\Users\Niko\Desktop\АКиТП курсач\wave_alg_v0.0.1\wave_alg\obj\Debug\wave_alg.csproj.GenerateResource.cache
+C:\Users\Niko\Desktop\АКиТП курсач\wave_alg_v0.0.1\wave_alg\obj\Debug\wave_alg.csproj.CoreCompileInputs.cache
+C:\Users\Niko\Desktop\АКиТП курсач\wave_alg_v0.0.1\wave_alg\obj\Debug\wave_alg.exe
+C:\Users\Niko\Desktop\АКиТП курсач\wave_alg_v0.0.1\wave_alg\obj\Debug\wave_alg.pdb

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.329
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wave_alg", "wave_alg.csproj", "{6B252DF2-E607-4356-B3CF-739CCA55149B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6B252DF2-E607-4356-B3CF-739CCA55149B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B252DF2-E607-4356-B3CF-739CCA55149B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B252DF2-E607-4356-B3CF-739CCA55149B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B252DF2-E607-4356-B3CF-739CCA55149B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {03482630-AE76-4248-BAC2-7DBDC7BD4F98}
+	EndGlobalSection
+EndGlobal
