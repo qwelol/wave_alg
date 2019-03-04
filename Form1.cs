@@ -16,7 +16,11 @@ namespace wave_alg
         int height;//размеры матрицы MxN
         int distance_x;
         int distance_y;//расстояние между кнопками
-        Button[,] button_array = new Button[1000,1000];
+        Point start = new Point(); // стартовая точка 
+        Point end = new Point(); // конечная точка
+        Button[,] button_array = new Button[100,100];
+        int counter=0; //счетчик кликов
+        int[,] matrix = new int[100, 100]; //матрица весов 
         public Form1()
         {
             InitializeComponent();
@@ -31,6 +35,14 @@ namespace wave_alg
         {
             width = Convert.ToInt32(textBox1.Text);
             height = Convert.ToInt32(textBox2.Text); //читаем размеры матрицы из texBox'ов 
+            //инициализация матрицы
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    matrix[i, j] = -1; //ячейка не помечена
+                }
+            }
             // вычисление размеров кнопок
             panel2.Width = ((panel2.Width / width) + 1) * width;
             panel2.Height = ((panel2.Height / height) + 1) * height;
@@ -54,13 +66,9 @@ namespace wave_alg
             }
             progressBar1.Visible=false;
             button1.Visible = false;
-            //this.Width = (distance_x * width) + 40;
-            //this.Height = (distance_y * height) + 140;
-            this.Width = panel2.Width +40;
+            this.Width = panel2.Width + 40;
             this.Height =panel2.Height + 140;
-            statusBar1.Text = "Выберите стартовую позицию";
-            button_array[1, 1].BackColor = Color.Orange;
-
+            statusBar1.Text = "Выберите стартовую ячейку";
         }
         // функция генерации ячейки
         private void create_Cell(int x, int y)
@@ -80,12 +88,66 @@ namespace wave_alg
         void onCellClick(object sender, EventArgs e)
         {
             var button = (Button)sender;
+            //Первый клик - стартовая ячейка
+            //Второй клик - конечная ячейка
+            //Последующие - препятствия
+            switch (counter)
+            {
+                case 0:
+                    Console.WriteLine((button.Location.X / distance_x) + " " + (button.Location.Y / distance_y));
+                    button_array[(button.Location.X / distance_x), (button.Location.Y / distance_y)].BackColor = Color.Orange; //красим ячейку
+                    start.X = button.Location.X / distance_x; start.Y = button.Location.Y / distance_y; //запоминаем стартовую точку
+                    matrix[start.X, start.Y] = 0; // помечаем стартовую ячейку
+                    statusBar1.Text = "Выберите конечную ячейку";
+                    break;
+                case 1:
+                    if (pointCompare((button.Location.X / distance_x), (button.Location.Y / distance_y), start.X, start.Y)) 
+                        //стартовая точка не может быть конечной
+                    {
+                        counter--;
+                    }
+                    else
+                    {
+                        Console.WriteLine((button.Location.X / distance_x) + " " + (button.Location.Y / distance_y));
+                        button_array[(button.Location.X / distance_x), (button.Location.Y / distance_y)].BackColor = Color.Orange;//красим ячейку
+                        end.X = button.Location.X / distance_x; end.Y = button.Location.Y / distance_y;//запоминаем конечную точку
+                        statusBar1.Text = "Укажите все препядствия и нажмите Расчитать";
+                    }
+                    break;
+                default:
+                    if (!((pointCompare((button.Location.X / distance_x), (button.Location.Y / distance_y), start.X, start.Y)) 
+                        || (pointCompare((button.Location.X / distance_x), (button.Location.Y / distance_y), end.X, end.Y))))
+                        //стартовая и конечная точки не могут быть препядствиями
+                    {
+                        Console.WriteLine((button.Location.X / distance_x) + " " + (button.Location.Y / distance_y));
+                        button_array[(button.Location.X / distance_x), (button.Location.Y / distance_y)].BackColor = Color.Black;//красим ячейку
+                        matrix[(button.Location.X / distance_x), (button.Location.Y / distance_y)] = int.MaxValue; // помечаем ячейку
+                    }
+                    break;
+            }
+            counter++;
             //тут будет много кода 
-            Console.WriteLine("good");
+            Console.WriteLine(counter);
             Console.WriteLine(button.Location);
             Console.WriteLine(button.Size);
             Console.WriteLine(this.Width);
             Console.WriteLine(this.Height);
+        }
+        //функция сравнения 2 точек
+        bool pointCompare(int x1, int y1, int x2, int y2)
+        {
+            return ((x1 == x2) && (y1 == y2));
+        }
+        void log()
+        {
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    Console.Write(matrix[i,j]);
+                }
+                Console.WriteLine();
+            }
         }
     }
 
