@@ -38,6 +38,7 @@
             this.button3 = new System.Windows.Forms.Button();
             this.statusBar1 = new System.Windows.Forms.StatusBar();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.button4 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -54,6 +55,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.button4);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.textBox2);
             this.panel1.Controls.Add(this.textBox1);
@@ -138,6 +140,17 @@
             this.progressBar1.TabIndex = 4;
             this.progressBar1.Visible = false;
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(396, 7);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(115, 39);
+            this.button4.TabIndex = 4;
+            this.button4.Text = "Расчит ать";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Visible = false;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -172,6 +185,7 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.StatusBar statusBar1;
         private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Button button4;
     }
 }
 

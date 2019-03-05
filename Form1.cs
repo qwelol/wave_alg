@@ -36,13 +36,7 @@ namespace wave_alg
             width = Convert.ToInt32(textBox1.Text);
             height = Convert.ToInt32(textBox2.Text); //читаем размеры матрицы из texBox'ов 
             //инициализация матрицы
-            for (int i = 0; i < width; i++)
-            {
-                for (int j = 0; j < height; j++)
-                {
-                    matrix[i, j] = -1; //ячейка не помечена
-                }
-            }
+            matrixInit();
             // вычисление размеров кнопок
             panel2.Width = ((panel2.Width / width) + 1) * width;
             panel2.Height = ((panel2.Height / height) + 1) * height;
@@ -66,6 +60,9 @@ namespace wave_alg
             }
             progressBar1.Visible=false;
             button1.Visible = false;
+            textBox1.Enabled = false;
+            textBox2.Enabled = false;
+            button4.Visible = true;
             this.Width = panel2.Width + 40;
             this.Height =panel2.Height + 140;
             statusBar1.Text = "Выберите стартовую ячейку";
@@ -81,7 +78,7 @@ namespace wave_alg
             button.FlatStyle = FlatStyle.Flat; // плоская кнопка
             panel2.Controls.Add(button); // добавление на форму
             button.Click += new EventHandler(onCellClick); //добавляем обработчик клика
-            button_array[(x / distance_x), (y / distance_y)] = button; // заполняем массив кнопками, 
+            button_array[(y / distance_y), (x / distance_x)] = button; // заполняем массив кнопками, 
                                                                    // чтобы к ним можно было получить доступ в любое время           
         }
         //функция-обработчик клика на ячейку
@@ -93,12 +90,15 @@ namespace wave_alg
             //Последующие - препятствия
             switch (counter)
             {
+                // чтобы перемещаться по OX, мы изменем j. Чтобы двигаться по OY мы изменяем i. 
+                // Именно поэтому позиции i в матрице соответствует координата Y, а позиции j - X
                 case 0:
-                    Console.WriteLine((button.Location.X / distance_x) + " " + (button.Location.Y / distance_y));
-                    button_array[(button.Location.X / distance_x), (button.Location.Y / distance_y)].BackColor = Color.Orange; //красим ячейку
+                    Console.WriteLine((button.Location.Y / distance_y) + " " + (button.Location.X / distance_x) );
+                    button_array[(button.Location.Y / distance_y), (button.Location.X / distance_x)].BackColor = Color.Orange; //красим ячейку
                     start.X = button.Location.X / distance_x; start.Y = button.Location.Y / distance_y; //запоминаем стартовую точку
-                    matrix[start.X, start.Y] = 0; // помечаем стартовую ячейку
+                    matrix[start.Y, start.X] = 0; // помечаем стартовую ячейку
                     statusBar1.Text = "Выберите конечную ячейку";
+                    log();
                     break;
                 case 1:
                     if (pointCompare((button.Location.X / distance_x), (button.Location.Y / distance_y), start.X, start.Y)) 
@@ -108,10 +108,11 @@ namespace wave_alg
                     }
                     else
                     {
-                        Console.WriteLine((button.Location.X / distance_x) + " " + (button.Location.Y / distance_y));
-                        button_array[(button.Location.X / distance_x), (button.Location.Y / distance_y)].BackColor = Color.Orange;//красим ячейку
+                        Console.WriteLine((button.Location.Y / distance_y) + " " + (button.Location.X / distance_x) );
+                        button_array[ (button.Location.Y / distance_y), (button.Location.X / distance_x)].BackColor = Color.Orange;//красим ячейку
                         end.X = button.Location.X / distance_x; end.Y = button.Location.Y / distance_y;//запоминаем конечную точку
                         statusBar1.Text = "Укажите все препядствия и нажмите Расчитать";
+                        log();
                     }
                     break;
                 default:
@@ -119,34 +120,97 @@ namespace wave_alg
                         || (pointCompare((button.Location.X / distance_x), (button.Location.Y / distance_y), end.X, end.Y))))
                         //стартовая и конечная точки не могут быть препядствиями
                     {
-                        Console.WriteLine((button.Location.X / distance_x) + " " + (button.Location.Y / distance_y));
-                        button_array[(button.Location.X / distance_x), (button.Location.Y / distance_y)].BackColor = Color.Black;//красим ячейку
-                        matrix[(button.Location.X / distance_x), (button.Location.Y / distance_y)] = int.MaxValue; // помечаем ячейку
+                        Console.WriteLine((button.Location.Y / distance_y) + " " + (button.Location.X / distance_x) );
+                        button_array[(button.Location.Y / distance_y), (button.Location.X / distance_x)].BackColor = Color.Black;//красим ячейку
+                        matrix[(button.Location.Y / distance_y), (button.Location.X / distance_x)] = 111;//int.MaxValue; // помечаем ячейку
+                        log();
                     }
                     break;
             }
             counter++;
-            //тут будет много кода 
-            Console.WriteLine(counter);
-            Console.WriteLine(button.Location);
-            Console.WriteLine(button.Size);
-            Console.WriteLine(this.Width);
-            Console.WriteLine(this.Height);
+            Console.WriteLine(start);
+            //Console.WriteLine(end);
+            //Console.WriteLine(counter);
+            //Console.WriteLine(button.Location);
+            //Console.WriteLine(button.Size);
+            //Console.WriteLine(this.Width);
+            //Console.WriteLine(this.Height);
+            //log();
+            //Console.WriteLine((button.Location.X / distance_x) + " " + (button.Location.Y / distance_y));
         }
         //функция сравнения 2 точек
         bool pointCompare(int x1, int y1, int x2, int y2)
         {
             return ((x1 == x2) && (y1 == y2));
         }
+        // процедура инициализации матрицы
+        void matrixInit()
+        {
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < width; j++)
+                {
+                    matrix[i, j] = -1; //ячейка не помечена
+                }
+            }
+        }
         void log()
         {
-            for (int i = 0; i < width; i++)
+            for (int i = 0; i < height; i++)
             {
-                for (int j = 0; j < height; j++)
+                for (int j = 0; j < width; j++)
                 {
-                    Console.Write(matrix[i,j]);
+                    Console.Write(matrix[i,j]+" ");
                 }
                 Console.WriteLine();
+            }
+        }
+        // расчет 
+        private void button4_Click(object sender, EventArgs e)
+        {
+            // чтобы перемещаться по OX, мы изменем j. Чтобы двигаться по OY мы изменяем i 
+            // имено поэтому такая запись matrix[end.Y, end.X]
+            int d = 0; // фронт волны (в стартовой ячейке =0)
+            bool emptyIteration = false; // флажок пустой итерации (отсутствие пути)
+            //распространение волны
+            while (matrix[end.Y, end.X] == -1 && !emptyIteration)
+            // если конечная ячейка не помечена и последняя итерация не была пустой (волне некуда распространяться)
+            {
+                emptyIteration = true;
+                for (int i = 0; i < height; i++)
+                {
+                    for (int j = 0; j < width; j++)
+                    {
+                        if (matrix[i, j] == d) //если метка ячейки совпадает с фронтом волны
+                        {
+                            wavePropagation(i, j);
+                            emptyIteration= false;
+                        }
+                    }
+                }
+                d++;
+            }
+            log();
+        }
+        //процедура пометки соседних ячеек
+        void wavePropagation(int i, int j)
+        {
+            if ((j - 1) >= 0 && matrix[i,j-1] == -1)
+            //если такая ячейка существует и она не помечена
+            {
+                matrix[i, j - 1] = matrix[i, j] + 1;
+            }
+            if ((i - 1) >= 0 && matrix[i-1, j] == -1)
+            {
+                matrix[i-1, j] = matrix[i, j] + 1;
+            }
+            if ((j + 1) < width && matrix[i, j + 1] == -1)
+            {
+                matrix[i, j + 1] = matrix[i, j] + 1;
+            }
+            if ((i+1) < height  && matrix[i+1, j] == -1)
+            {
+                matrix[i+1, j] = matrix[i, j] + 1;
             }
         }
     }
