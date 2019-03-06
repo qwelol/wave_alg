@@ -21,6 +21,7 @@ namespace wave_alg
         Button[,] button_array = new Button[100,100];
         int counter=0; //счетчик кликов
         int[,] matrix = new int[100, 100]; //матрица весов 
+        Stack<Point> path = new Stack<Point>();
         public Form1()
         {
             InitializeComponent();
@@ -70,9 +71,11 @@ namespace wave_alg
         // функция генерации ячейки
         private void create_Cell(int x, int y)
         {
+            int fontSize = (distance_y / 4)-1;
             Button button = new Button();
             button.Location = new Point(x, y); //позиция кнопки 
             button.Size = new Size(distance_x, distance_y); //размеры
+            button.Font = new Font("Microsoft Sans Serif",fontSize);
             button.FlatAppearance.BorderSize = 1; 
             button.FlatAppearance.BorderColor = Color.Silver;  //рамка
             button.FlatStyle = FlatStyle.Flat; // плоская кнопка
@@ -122,7 +125,7 @@ namespace wave_alg
                     {
                         Console.WriteLine((button.Location.Y / distance_y) + " " + (button.Location.X / distance_x) );
                         button_array[(button.Location.Y / distance_y), (button.Location.X / distance_x)].BackColor = Color.Black;//красим ячейку
-                        matrix[(button.Location.Y / distance_y), (button.Location.X / distance_x)] = 111;//int.MaxValue; // помечаем ячейку
+                        matrix[(button.Location.Y / distance_y), (button.Location.X / distance_x)] = int.MaxValue;//int.MaxValue; // помечаем ячейку
                         log();
                     }
                     break;
@@ -132,7 +135,7 @@ namespace wave_alg
             //Console.WriteLine(end);
             //Console.WriteLine(counter);
             //Console.WriteLine(button.Location);
-            //Console.WriteLine(button.Size);
+            Console.WriteLine(button.Size);
             //Console.WriteLine(this.Width);
             //Console.WriteLine(this.Height);
             //log();
@@ -165,6 +168,14 @@ namespace wave_alg
                 Console.WriteLine();
             }
         }
+        void logStack(Stack<Point> stack)
+        {
+            int count = stack.Count;
+            for (int i = 0; i < count; i++)
+            {
+                Console.WriteLine(stack.Pop());
+            }
+        }
         // расчет 
         private void button4_Click(object sender, EventArgs e)
         {
@@ -190,7 +201,43 @@ namespace wave_alg
                 }
                 d++;
             }
-            log();
+            if (matrix[end.Y, end.X] != -1) // если конечная ячейка не заполнена, то пути нет
+            {
+                // восстановление пути
+                path.Push(end);
+                while (matrix[path.Peek().Y, path.Peek().X] != 0)
+                {
+                    path.Push(scanNeighbors(path.Peek()));
+                }
+                statusBar1.Text = "Путь найден";
+                // отображение пути
+                path.Pop();
+                int count = path.Count;
+                Point tmp = new Point();
+                for (int i = 0; i < count-1; i++)
+                {
+                    tmp = path.Pop();
+                    button_array[tmp.Y, tmp.X].BackColor = Color.Yellow;
+                }
+            }
+            else
+            {
+                statusBar1.Text = "Путь не существует";
+            }
+            Console.WriteLine("stack");
+            logStack(path);
+            //log();
+            //вывод значений на кнопки
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < width; j++)
+                {
+                    if (matrix[i, j] != int.MaxValue && matrix[i, j] != -1)
+                    {
+                        button_array[i, j].Text =matrix[i, j].ToString();
+                    }
+                }
+            }
         }
         //процедура пометки соседних ячеек
         void wavePropagation(int i, int j)
@@ -212,6 +259,41 @@ namespace wave_alg
             {
                 matrix[i+1, j] = matrix[i, j] + 1;
             }
+        }
+        Point scanNeighbors (Point currentPosition)
+        {
+            Point newPosition = new Point();
+            newPosition.X = currentPosition.X;newPosition.Y = currentPosition.Y;
+            if ((currentPosition.X-1 >= 0) && (matrix[currentPosition.Y, (currentPosition.X - 1)] != -1) &&
+                (matrix[currentPosition.Y, currentPosition.X] - matrix[currentPosition.Y, (currentPosition.X - 1)]) == 1)
+            {
+                newPosition.X = currentPosition.X - 1;
+                Console.WriteLine(newPosition);
+                return newPosition;
+            }
+            if ((currentPosition.Y - 1 >= 0) && (matrix[(currentPosition.Y-1), currentPosition.X] != -1) &&
+            (matrix[currentPosition.Y, currentPosition.X] - matrix[(currentPosition.Y - 1), currentPosition.X]) == 1)
+            {
+                newPosition.Y = currentPosition.Y - 1;
+                Console.WriteLine(newPosition);
+                return newPosition;
+            }
+            if ((currentPosition.X+1 >= height) && (matrix[currentPosition.Y, (currentPosition.X + 1)] != -1) &&
+            (matrix[currentPosition.Y, currentPosition.X] - matrix[currentPosition.Y, (currentPosition.X + 1)]) == 1)
+            {
+                newPosition.X = currentPosition.X + 1;
+                Console.WriteLine(newPosition);
+                return newPosition;
+            }
+            if ((currentPosition.Y+1 >= width) && (matrix[(currentPosition.Y + 1), currentPosition.X] != -1) &&
+            (matrix[currentPosition.Y, currentPosition.X] - matrix[(currentPosition.Y + 1), currentPosition.X]) == 1)
+            {
+                newPosition.Y = currentPosition.Y + 1;
+                Console.WriteLine(newPosition);
+                return newPosition;
+            }
+            return new Point();
+            
         }
     }
 
