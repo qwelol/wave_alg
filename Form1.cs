@@ -18,20 +18,20 @@ namespace wave_alg
         int distance_y;//расстояние между кнопками
         Point start = new Point(); // стартовая точка 
         Point end = new Point(); // конечная точка
-        Button[,] button_array = new Button[100,100];
+        Button[,] button_array = new Button[100,100];//массив кнопок
         int counter=0; //счетчик кликов
         int[,] matrix = new int[100, 100]; //матрица весов 
-        Stack<Point> path = new Stack<Point>();
+        Stack<Point> path = new Stack<Point>(); //путь
+        bool counted = false; //флаг окончания расчета
         public Form1()
         {
             InitializeComponent();
         }
-
         private void Form1_Load(object sender, EventArgs e)
         {
             statusBar1.Text = "Укажите размеры платы";
         }
-
+        //клик на кнопку Генерировать
         private void button1_Click(object sender, EventArgs e)
         {
             width = Convert.ToInt32(textBox1.Text);
@@ -43,8 +43,8 @@ namespace wave_alg
             panel2.Height = ((panel2.Height / height) + 1) * height;
             distance_x = (panel2.Width/width);
             distance_y = (panel2.Height/height); 
-            Console.Write(panel2.Width + " " + panel2.Height);
-            Console.WriteLine(distance_x+" "+distance_y);
+            //Console.Write(panel2.Width + " " + panel2.Height);
+            //Console.WriteLine(distance_x+" "+distance_y);
             //прогресс-бар
             progressBar1.Visible = true;
             progressBar1.Minimum = 0;
@@ -75,7 +75,7 @@ namespace wave_alg
             Button button = new Button();
             button.Location = new Point(x, y); //позиция кнопки 
             button.Size = new Size(distance_x, distance_y); //размеры
-            button.Font = new Font("Microsoft Sans Serif",fontSize);
+            button.Font = new Font("Microsoft Sans Serif",fontSize);//шрифт
             button.FlatAppearance.BorderSize = 1; 
             button.FlatAppearance.BorderColor = Color.Silver;  //рамка
             button.FlatStyle = FlatStyle.Flat; // плоская кнопка
@@ -91,90 +91,58 @@ namespace wave_alg
             //Первый клик - стартовая ячейка
             //Второй клик - конечная ячейка
             //Последующие - препятствия
-            switch (counter)
+            if (!counted) //если мы уже все посчитали, то клики обрабатывать не нужно
             {
-                // чтобы перемещаться по OX, мы изменем j. Чтобы двигаться по OY мы изменяем i. 
-                // Именно поэтому позиции i в матрице соответствует координата Y, а позиции j - X
-                case 0:
-                    Console.WriteLine((button.Location.Y / distance_y) + " " + (button.Location.X / distance_x) );
-                    button_array[(button.Location.Y / distance_y), (button.Location.X / distance_x)].BackColor = Color.Orange; //красим ячейку
-                    start.X = button.Location.X / distance_x; start.Y = button.Location.Y / distance_y; //запоминаем стартовую точку
-                    matrix[start.Y, start.X] = 0; // помечаем стартовую ячейку
-                    statusBar1.Text = "Выберите конечную ячейку";
-                    log();
-                    break;
-                case 1:
-                    if (pointCompare((button.Location.X / distance_x), (button.Location.Y / distance_y), start.X, start.Y)) 
+                switch (counter)
+                {
+                    // чтобы перемещаться по OX, мы изменем j. Чтобы двигаться по OY мы изменяем i. 
+                    // Именно поэтому позиции i в матрице соответствует координата Y, а позиции j - X
+                    case 0:
+                        Console.WriteLine((button.Location.Y / distance_y) + " " + (button.Location.X / distance_x));
+                        button_array[(button.Location.Y / distance_y), (button.Location.X / distance_x)].BackColor = Color.Orange; //красим ячейку
+                        start.X = button.Location.X / distance_x; start.Y = button.Location.Y / distance_y; //запоминаем стартовую точку
+                        matrix[start.Y, start.X] = 0; // помечаем стартовую ячейку
+                        statusBar1.Text = "Выберите конечную ячейку";
+                        log();
+                        break;
+                    case 1:
+                        if (pointCompare((button.Location.X / distance_x), (button.Location.Y / distance_y), start.X, start.Y))
                         //стартовая точка не может быть конечной
-                    {
-                        counter--;
-                    }
-                    else
-                    {
-                        Console.WriteLine((button.Location.Y / distance_y) + " " + (button.Location.X / distance_x) );
-                        button_array[ (button.Location.Y / distance_y), (button.Location.X / distance_x)].BackColor = Color.Orange;//красим ячейку
-                        end.X = button.Location.X / distance_x; end.Y = button.Location.Y / distance_y;//запоминаем конечную точку
-                        statusBar1.Text = "Укажите все препядствия и нажмите Расчитать";
-                        log();
-                    }
-                    break;
-                default:
-                    if (!((pointCompare((button.Location.X / distance_x), (button.Location.Y / distance_y), start.X, start.Y)) 
-                        || (pointCompare((button.Location.X / distance_x), (button.Location.Y / distance_y), end.X, end.Y))))
+                        {
+                            counter--;
+                        }
+                        else
+                        {
+                            Console.WriteLine((button.Location.Y / distance_y) + " " + (button.Location.X / distance_x));
+                            button_array[(button.Location.Y / distance_y), (button.Location.X / distance_x)].BackColor = Color.Orange;//красим ячейку
+                            end.X = button.Location.X / distance_x; end.Y = button.Location.Y / distance_y;//запоминаем конечную точку
+                            statusBar1.Text = "Укажите все препядствия и нажмите Расчитать";
+                            log();
+                        }
+                        break;
+                    default:
+                        if (!((pointCompare((button.Location.X / distance_x), (button.Location.Y / distance_y), start.X, start.Y))
+                            || (pointCompare((button.Location.X / distance_x), (button.Location.Y / distance_y), end.X, end.Y))))
                         //стартовая и конечная точки не могут быть препядствиями
-                    {
-                        Console.WriteLine((button.Location.Y / distance_y) + " " + (button.Location.X / distance_x) );
-                        button_array[(button.Location.Y / distance_y), (button.Location.X / distance_x)].BackColor = Color.Black;//красим ячейку
-                        matrix[(button.Location.Y / distance_y), (button.Location.X / distance_x)] = int.MaxValue;//int.MaxValue; // помечаем ячейку
-                        log();
-                    }
-                    break;
+                        {
+                            Console.WriteLine((button.Location.Y / distance_y) + " " + (button.Location.X / distance_x));
+                            button_array[(button.Location.Y / distance_y), (button.Location.X / distance_x)].BackColor = Color.Black;//красим ячейку
+                            matrix[(button.Location.Y / distance_y), (button.Location.X / distance_x)] = int.MaxValue; // помечаем ячейку
+                            log();
+                        }
+                        break;
+                }
             }
             counter++;
-            Console.WriteLine(start);
+            //Console.WriteLine(start);
             //Console.WriteLine(end);
             //Console.WriteLine(counter);
             //Console.WriteLine(button.Location);
-            Console.WriteLine(button.Size);
+            //Console.WriteLine(button.Size);
             //Console.WriteLine(this.Width);
             //Console.WriteLine(this.Height);
             //log();
             //Console.WriteLine((button.Location.X / distance_x) + " " + (button.Location.Y / distance_y));
-        }
-        //функция сравнения 2 точек
-        bool pointCompare(int x1, int y1, int x2, int y2)
-        {
-            return ((x1 == x2) && (y1 == y2));
-        }
-        // процедура инициализации матрицы
-        void matrixInit()
-        {
-            for (int i = 0; i < height; i++)
-            {
-                for (int j = 0; j < width; j++)
-                {
-                    matrix[i, j] = -1; //ячейка не помечена
-                }
-            }
-        }
-        void log()
-        {
-            for (int i = 0; i < height; i++)
-            {
-                for (int j = 0; j < width; j++)
-                {
-                    Console.Write(matrix[i,j]+" ");
-                }
-                Console.WriteLine();
-            }
-        }
-        void logStack(Stack<Point> stack)
-        {
-            int count = stack.Count;
-            for (int i = 0; i < count; i++)
-            {
-                Console.WriteLine(stack.Pop());
-            }
         }
         // расчет 
         private void button4_Click(object sender, EventArgs e)
@@ -183,6 +151,7 @@ namespace wave_alg
             // имено поэтому такая запись matrix[end.Y, end.X]
             int d = 0; // фронт волны (в стартовой ячейке =0)
             bool emptyIteration = false; // флажок пустой итерации (отсутствие пути)
+            counted = true; //мы начали считать, ничего менять уже нельзя
             //распространение волны
             while (matrix[end.Y, end.X] == -1 && !emptyIteration)
             // если конечная ячейка не помечена и последняя итерация не была пустой (волне некуда распространяться)
@@ -212,10 +181,11 @@ namespace wave_alg
                 statusBar1.Text = "Путь найден";
                 // отображение пути
                 path.Pop();
-                int count = path.Count;
+                int count = path.Count; // значение path.Count нельзя использовать в цикле т.к. оно уменьшается пры взятии из стека
                 Point tmp = new Point();
                 for (int i = 0; i < count-1; i++)
                 {
+                    //здесь же будем записывать путь для вывода в файл
                     tmp = path.Pop();
                     button_array[tmp.Y, tmp.X].BackColor = Color.Yellow;
                 }
@@ -224,15 +194,15 @@ namespace wave_alg
             {
                 statusBar1.Text = "Путь не существует";
             }
-            Console.WriteLine("stack");
-            logStack(path);
+            //Console.WriteLine("stack");
+            //logStack(path);
             //log();
             //вывод значений на кнопки
             for (int i = 0; i < height; i++)
             {
                 for (int j = 0; j < width; j++)
                 {
-                    if (matrix[i, j] != int.MaxValue && matrix[i, j] != -1)
+                    if (matrix[i, j] != int.MaxValue && matrix[i, j] != -1) //значения препядствий и не помеченныйх ячеек не отображаем
                     {
                         button_array[i, j].Text =matrix[i, j].ToString();
                     }
@@ -242,6 +212,7 @@ namespace wave_alg
         //процедура пометки соседних ячеек
         void wavePropagation(int i, int j)
         {
+            //последовательность значения не имеет, т.к. мы помечаем все соседние ячейки
             if ((j - 1) >= 0 && matrix[i,j-1] == -1)
             //если такая ячейка существует и она не помечена
             {
@@ -260,41 +231,84 @@ namespace wave_alg
                 matrix[i+1, j] = matrix[i, j] + 1;
             }
         }
+        //функция просмотра соседних ячеек
         Point scanNeighbors (Point currentPosition)
         {
+            //тут последовательность важна
             Point newPosition = new Point();
+            Console.WriteLine("Current" + currentPosition);
             newPosition.X = currentPosition.X;newPosition.Y = currentPosition.Y;
-            if ((currentPosition.X-1 >= 0) && (matrix[currentPosition.Y, (currentPosition.X - 1)] != -1) &&
-                (matrix[currentPosition.Y, currentPosition.X] - matrix[currentPosition.Y, (currentPosition.X - 1)]) == 1)
+            //если такая ячейка существует, она заполнена и ее значение меньше текущего на 1
+            if ((currentPosition.X-1 >= 0) && 
+                (matrix[currentPosition.Y, currentPosition.X] - matrix[currentPosition.Y, (currentPosition.X - 1)]) == 1)//влево
+                
             {
                 newPosition.X = currentPosition.X - 1;
-                Console.WriteLine(newPosition);
+                Console.WriteLine("Current" + currentPosition);
+                Console.WriteLine("Left"+newPosition);
                 return newPosition;
             }
-            if ((currentPosition.Y - 1 >= 0) && (matrix[(currentPosition.Y-1), currentPosition.X] != -1) &&
-            (matrix[currentPosition.Y, currentPosition.X] - matrix[(currentPosition.Y - 1), currentPosition.X]) == 1)
+            if ((currentPosition.Y - 1 >= 0) && 
+            (matrix[currentPosition.Y, currentPosition.X] - matrix[(currentPosition.Y - 1), currentPosition.X]) == 1)//вверх
             {
                 newPosition.Y = currentPosition.Y - 1;
-                Console.WriteLine(newPosition);
+                Console.WriteLine("Current" + currentPosition);
+                Console.WriteLine("Up" + newPosition);
                 return newPosition;
             }
-            if ((currentPosition.X+1 >= height) && (matrix[currentPosition.Y, (currentPosition.X + 1)] != -1) &&
-            (matrix[currentPosition.Y, currentPosition.X] - matrix[currentPosition.Y, (currentPosition.X + 1)]) == 1)
+            if ((currentPosition.X+1 <= width) && 
+            (matrix[currentPosition.Y, currentPosition.X] - matrix[currentPosition.Y, (currentPosition.X + 1)]) == 1)//вправо
             {
                 newPosition.X = currentPosition.X + 1;
-                Console.WriteLine(newPosition);
+                Console.WriteLine("Current" + currentPosition);
+                Console.WriteLine("Right" + newPosition);
                 return newPosition;
             }
-            if ((currentPosition.Y+1 >= width) && (matrix[(currentPosition.Y + 1), currentPosition.X] != -1) &&
-            (matrix[currentPosition.Y, currentPosition.X] - matrix[(currentPosition.Y + 1), currentPosition.X]) == 1)
+            if ((currentPosition.Y+1 <= height) && 
+            (matrix[currentPosition.Y, currentPosition.X] - matrix[(currentPosition.Y + 1), currentPosition.X]) == 1)//вниз
             {
                 newPosition.Y = currentPosition.Y + 1;
-                Console.WriteLine(newPosition);
+                Console.WriteLine("Current" + currentPosition);
+                Console.WriteLine("Down" + newPosition);
                 return newPosition;
             }
+            Console.WriteLine("alarm");
             return new Point();
-            
+        }
+        //функция сравнения 2 точек
+        bool pointCompare(int x1, int y1, int x2, int y2)
+        {
+            return ((x1 == x2) && (y1 == y2));
+        }
+        // процедура инициализации матрицы
+        void matrixInit()
+        {
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < width; j++)
+                {
+                    matrix[i, j] = -1; //ячейка не помечена
+                }
+            }
+        }
+        void log()
+        {
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < width; j++)
+                {
+                    Console.Write(matrix[i, j] + " ");
+                }
+                Console.WriteLine();
+            }
+        }
+        void logStack(Stack<Point> stack)
+        {
+            int count = stack.Count;
+            for (int i = 0; i < count; i++)
+            {
+                Console.WriteLine(stack.Pop());
+            }
         }
     }
-
 }
