@@ -1,4 +1,5 @@
-﻿using System;
+﻿//TODO: запретить возможность ввода лишних символов в поля ввода, прикрутить вывод в файл готовых строк
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -23,52 +24,54 @@ namespace wave_alg
         int[,] matrix = new int[100, 100]; //матрица весов 
         Stack<Point> path = new Stack<Point>(); //путь
         bool counted = false; //флаг окончания расчета
+        string[,] outputMatrix = new string [100,100];//матрица для вывода в файл
+        string outputPath; //путь для вывода в файл
         public Form1()
         {
             InitializeComponent();
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-            statusBar1.Text = "Укажите размеры платы";
+            statusBar.Text = "Укажите размеры платы";
         }
         //клик на кнопку Генерировать
-        private void button1_Click(object sender, EventArgs e)
+        private void generateBtn_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text != "" && textBox2.Text != "")
+            if (widthTB.Text != "" && heightTB.Text != "")
             {
-                width = Convert.ToInt32(textBox1.Text);
-                height = Convert.ToInt32(textBox2.Text); //читаем размеры матрицы из texBox'ов 
+                width = Convert.ToInt32(widthTB.Text);
+                height = Convert.ToInt32(heightTB.Text); //читаем размеры матрицы из texBox'ов 
                                                          //инициализация матрицы
                 matrixInit();
                 // вычисление размеров кнопок
-                panel2.Width = ((panel2.Width / width) + 1) * width;
-                panel2.Height = ((panel2.Height / height) + 1) * height;
-                distance_x = (panel2.Width / width);
-                distance_y = (panel2.Height / height);
+                workplacePanel.Width = ((workplacePanel.Width / width) + 1) * width;
+                workplacePanel.Height = ((workplacePanel.Height / height) + 1) * height;
+                distance_x = (workplacePanel.Width / width);
+                distance_y = (workplacePanel.Height / height);
                 //Console.Write(panel2.Width + " " + panel2.Height);
                 //Console.WriteLine(distance_x+" "+distance_y);
                 //прогресс-бар
-                progressBar1.Visible = true;
-                progressBar1.Minimum = 0;
-                progressBar1.Maximum = width;
-                progressBar1.Value = 0;
-                progressBar1.Step = 1;
+                progressBar.Visible = true;
+                progressBar.Minimum = 0;
+                progressBar.Maximum = width;
+                progressBar.Value = 0;
+                progressBar.Step = 1;
                 for (int x = 0; (x) < width * distance_x; x += distance_x)
                 {
                     for (int y = 0; (y) < height * distance_y; y += distance_y)
                     {
                         create_Cell(x, y);
                     }
-                    progressBar1.PerformStep();
+                    progressBar.PerformStep();
                 }
-                progressBar1.Visible = false;
-                button1.Visible = false;
-                textBox1.Enabled = false;
-                textBox2.Enabled = false;
-                button4.Visible = true;
-                this.Width = panel2.Width + 40;
-                this.Height = panel2.Height + 140;
-                statusBar1.Text = "Выберите стартовую ячейку";
+                progressBar.Visible = false;
+                generateBtn.Visible = false;
+                widthTB.Enabled = false;
+                heightTB.Enabled = false;
+                calculateBtn.Visible = true;
+                this.Width = workplacePanel.Width + 40;
+                this.Height = workplacePanel.Height + 160;
+                statusBar.Text = "Выберите стартовую ячейку";
             }
         }
         // функция генерации ячейки
@@ -82,7 +85,7 @@ namespace wave_alg
             button.FlatAppearance.BorderSize = 1; 
             button.FlatAppearance.BorderColor = Color.Silver;  //рамка
             button.FlatStyle = FlatStyle.Flat; // плоская кнопка
-            panel2.Controls.Add(button); // добавление на форму
+            workplacePanel.Controls.Add(button); // добавление на форму
             button.Click += new EventHandler(onCellClick); //добавляем обработчик клика
             button_array[(y / distance_y), (x / distance_x)] = button; // заполняем массив кнопками, 
                                                                    // чтобы к ним можно было получить доступ в любое время           
@@ -91,7 +94,6 @@ namespace wave_alg
         void onCellClick(object sender, EventArgs e)
         {
             var button = (Button)sender;
-            //e.Button = MouseButtons.Left;
             //Первый клик - стартовая ячейка
             //Второй клик - конечная ячейка
             //Последующие - препятствия
@@ -106,7 +108,7 @@ namespace wave_alg
                         button_array[(button.Location.Y / distance_y), (button.Location.X / distance_x)].BackColor = Color.Orange; //красим ячейку
                         start.X = button.Location.X / distance_x; start.Y = button.Location.Y / distance_y; //запоминаем стартовую точку
                         matrix[start.Y, start.X] = 0; // помечаем стартовую ячейку
-                        statusBar1.Text = "Выберите конечную ячейку";
+                        statusBar.Text = "Выберите конечную ячейку";
                         log();
                         break;
                     case 1:
@@ -120,7 +122,7 @@ namespace wave_alg
                             Console.WriteLine((button.Location.Y / distance_y) + " " + (button.Location.X / distance_x));
                             button_array[(button.Location.Y / distance_y), (button.Location.X / distance_x)].BackColor = Color.Orange;//красим ячейку
                             end.X = button.Location.X / distance_x; end.Y = button.Location.Y / distance_y;//запоминаем конечную точку
-                            statusBar1.Text = "Укажите все препядствия и нажмите Расчитать";
+                            statusBar.Text = "Укажите все препядствия и нажмите Расчитать";
                             log();
                         }
                         break;
@@ -160,72 +162,78 @@ namespace wave_alg
             //Console.WriteLine((button.Location.X / distance_x) + " " + (button.Location.Y / distance_y));
         }
         // расчет 
-        private void button4_Click(object sender, EventArgs e)
+        private void calculateBtn_Click(object sender, EventArgs e)
         {
             // чтобы перемещаться по OX, мы изменем j. Чтобы двигаться по OY мы изменяем i 
             // имено поэтому такая запись matrix[end.Y, end.X]
-            int d = 0; // фронт волны (в стартовой ячейке =0)
-            bool emptyIteration = false; // флажок пустой итерации (отсутствие пути)
-            counted = true; //мы начали считать, ничего менять уже нельзя
-            //распространение волны
-            while (matrix[end.Y, end.X] == -1 && !emptyIteration)
-            // если конечная ячейка не помечена и последняя итерация не была пустой (волне некуда распространяться)
+            if (!(end.X==-1 || start.X==-1)) 
+            //не нужно делать расчет, если конечная или начальная точки не заданы
             {
-                emptyIteration = true;
+                int d = 0; // фронт волны (в стартовой ячейке =0)
+                bool emptyIteration = false; // флажок пустой итерации (отсутствие пути)
+                counted = true; //мы начали считать, ничего менять уже нельзя
+                                //распространение волны
+                while (matrix[end.Y, end.X] == -1 && !emptyIteration)
+                // если конечная ячейка не помечена и последняя итерация не была пустой (волне некуда распространяться)
+                {
+                    emptyIteration = true;
+                    for (int i = 0; i < height; i++)
+                    {
+                        for (int j = 0; j < width; j++)
+                        {
+                            if (matrix[i, j] == d) //если метка ячейки совпадает с фронтом волны
+                            {
+                                wavePropagation(i, j);
+                                emptyIteration = false;
+                            }
+                        }
+                    }
+                    d++;
+                }
+                if (matrix[end.Y, end.X] != -1) // если конечная ячейка не заполнена, то пути нет
+                {
+                    // восстановление пути
+                    path.Push(end);
+                    while (matrix[path.Peek().Y, path.Peek().X] != 0)
+                    {
+                        path.Push(scanNeighbors(path.Peek()));
+                    }
+                    statusBar.Text = "Путь найден";
+                    // отображение пути
+                    Point tmp = new Point();
+                    tmp = path.Pop();
+                    int count = path.Count; // значение path.Count нельзя использовать в цикле т.к. оно уменьшается пры взятии из стека
+                    outputPath = outputPath + "[" + (tmp.Y + 1).ToString() + "," + (tmp.X + 1).ToString() + "] ";
+                    for (int i = 0; i < count - 1; i++)
+                    {
+                        //здесь же записываем путь для вывода в файл
+                        tmp = path.Pop();
+                        outputPath = outputPath + "[" + (tmp.Y + 1).ToString() + "," + (tmp.X + 1).ToString() + "] ";
+                        button_array[tmp.Y, tmp.X].BackColor = Color.Yellow;
+                    }
+                    tmp = path.Pop();
+                    outputPath = outputPath + "[" + (tmp.Y + 1).ToString() + "," + (tmp.X + 1).ToString() + "] ";
+                    Console.WriteLine(outputPath);
+                }
+                else
+                {
+                    statusBar.Text = "Путь не существует";
+                }
+                //вывод значений на кнопки
                 for (int i = 0; i < height; i++)
                 {
                     for (int j = 0; j < width; j++)
                     {
-                        if (matrix[i, j] == d) //если метка ячейки совпадает с фронтом волны
+                        if (matrix[i, j] != int.MaxValue && matrix[i, j] != -1) //значения препядствий и не помеченныйх ячеек не отображаем
                         {
-                            wavePropagation(i, j);
-                            emptyIteration= false;
+                            button_array[i, j].Text = matrix[i, j].ToString();
                         }
                     }
                 }
-                d++;
+                calculateBtn.Visible = false;
+                againBtn.Visible = true;
+                saveToolStripMenuItem.Enabled = true;
             }
-            if (matrix[end.Y, end.X] != -1) // если конечная ячейка не заполнена, то пути нет
-            {
-                // восстановление пути
-                path.Push(end);
-                while (matrix[path.Peek().Y, path.Peek().X] != 0)
-                {
-                    path.Push(scanNeighbors(path.Peek()));
-                }
-                statusBar1.Text = "Путь найден";
-                // отображение пути
-                path.Pop();
-                int count = path.Count; // значение path.Count нельзя использовать в цикле т.к. оно уменьшается пры взятии из стека
-                Point tmp = new Point();
-                for (int i = 0; i < count-1; i++)
-                {
-                    //здесь же будем записывать путь для вывода в файл
-                    tmp = path.Pop();
-                    button_array[tmp.Y, tmp.X].BackColor = Color.Yellow;
-                }
-                path.Pop();
-            }
-            else
-            {
-                statusBar1.Text = "Путь не существует";
-            }
-            //Console.WriteLine("stack");
-            //logStack(path);
-            //log();
-            //вывод значений на кнопки
-            for (int i = 0; i < height; i++)
-            {
-                for (int j = 0; j < width; j++)
-                {
-                    if (matrix[i, j] != int.MaxValue && matrix[i, j] != -1) //значения препядствий и не помеченныйх ячеек не отображаем
-                    {
-                        button_array[i, j].Text =matrix[i, j].ToString();
-                    }
-                }
-            }
-            button4.Visible = false;
-            button5.Visible = true;
         }
         //процедура пометки соседних ячеек
         void wavePropagation(int i, int j)
@@ -291,8 +299,74 @@ namespace wave_alg
                 return newPosition;
             }
             Console.WriteLine("alarm");
-            return new Point();
+            return newPosition;
         }
+        //сохранение в файл
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //нужно записать матрицу в строку, потом вывести ее и outputPath в текстовый файл
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < width; j++)
+                {
+                    if (matrix[i, j] != int.MaxValue)
+                    {
+                        outputMatrix[i, j] = matrix[i, j].ToString();
+                    }
+                    else
+                    {
+                        outputMatrix[i, j] = "inf";
+                    }
+                }
+            }
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < width; j++)
+                {
+                    Console.Write(outputMatrix[i, j] + " ");
+                }
+                Console.WriteLine();
+            }
+        }
+        //возврат к исходному состоянию
+        private void againBtn_Click(object sender, EventArgs e)
+        {
+            //возвращаем переменные в исходное состояние
+            matrixInit();
+            counted = false;
+            counter = 0;
+            start.X=-1; start.Y = -1;
+            end.X = -1; end.Y = -1;
+            outputPath = "";
+            Array.Clear(outputMatrix,0,outputMatrix.Length);
+            saveToolStripMenuItem.Enabled = false;
+            workplacePanel.Visible = false; //скроем панель, чтобы не было видно удаления кнопок
+            //for (int x = 0; x < height; x++)
+            //{
+            //    for (int y = 0; y < width; y++)
+            //    {
+            //        workplacePanel.Controls.Remove(button_array[x, y]); //удаляем кнопки
+            //    }
+            //}
+            workplacePanel.Controls.Clear();
+            Array.Clear(button_array, 0, button_array.Length);
+            //ставим исходные размеры
+            workplacePanel.Width = 700;
+            workplacePanel.Height = 520;
+            workplacePanel.Visible = true;
+            this.Width = 740;
+            this.Height = 680;
+            againBtn.Visible = false;
+            //удаляем предыдущие значения размеров, делаем доступным ввод новых
+            widthTB.Text = "";
+            heightTB.Text = "";
+            widthTB.Enabled = true;
+            heightTB.Enabled = true;
+            //делаем снова доступной кнопку генерации 
+            generateBtn.Visible = true;
+            statusBar.Text = "Выберите стартовую ячейку";
+        }
+
         //функция сравнения 2 точек
         bool pointCompare(int x1, int y1, int x2, int y2)
         {
@@ -329,30 +403,9 @@ namespace wave_alg
             }
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private void quitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //нужно вернуть все в исходное состояние
-            matrixInit();
-            counted = false;
-            counter = 0;
-            for (int x = 0; x < height; x++)
-            {
-                for (int y = 0; y < width; y ++)
-                {
-                    panel2.Controls.Remove(button_array[x,y]);
-                }
-            }
-            panel2.Width = 600;
-            panel2.Height = 540;
-            this.Width = 640;
-            this.Height = 680;
-            button5.Visible = false;
-            textBox1.Text = "";
-            textBox2.Text = "";
-            textBox1.Enabled = true;
-            textBox2.Enabled = true;
-            button1.Visible = true;
-            statusBar1.Text = "Выберите стартовую ячейку";
+            Application.Exit();
         }
     }
 }

@@ -28,55 +28,48 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.button4 = new System.Windows.Forms.Button();
+            this.components = new System.ComponentModel.Container();
+            this.generateBtn = new System.Windows.Forms.Button();
+            this.settings_panel = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.button3 = new System.Windows.Forms.Button();
-            this.statusBar1 = new System.Windows.Forms.StatusBar();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.button5 = new System.Windows.Forms.Button();
-            this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
+            this.heightTB = new System.Windows.Forms.TextBox();
+            this.widthTB = new System.Windows.Forms.TextBox();
+            this.againBtn = new System.Windows.Forms.Button();
+            this.calculateBtn = new System.Windows.Forms.Button();
+            this.workplacePanel = new System.Windows.Forms.Panel();
+            this.statusBar = new System.Windows.Forms.StatusBar();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.settings_panel.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // button1
+            // generateBtn
             // 
-            this.button1.Location = new System.Drawing.Point(396, 7);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(115, 39);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Сгенерировать";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.generateBtn.Location = new System.Drawing.Point(396, 7);
+            this.generateBtn.Name = "generateBtn";
+            this.generateBtn.Size = new System.Drawing.Size(115, 39);
+            this.generateBtn.TabIndex = 0;
+            this.generateBtn.Text = "Сгенерировать";
+            this.generateBtn.UseVisualStyleBackColor = true;
+            this.generateBtn.Click += new System.EventHandler(this.generateBtn_Click);
             // 
-            // panel1
+            // settings_panel
             // 
-            this.panel1.Controls.Add(this.button5);
-            this.panel1.Controls.Add(this.button4);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.textBox2);
-            this.panel1.Controls.Add(this.textBox1);
-            this.panel1.Controls.Add(this.button1);
-            this.panel1.Location = new System.Drawing.Point(12, 12);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(600, 53);
-            this.panel1.TabIndex = 1;
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(396, 7);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(115, 39);
-            this.button4.TabIndex = 4;
-            this.button4.Text = "Расчит ать";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Visible = false;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.settings_panel.Controls.Add(this.label1);
+            this.settings_panel.Controls.Add(this.heightTB);
+            this.settings_panel.Controls.Add(this.widthTB);
+            this.settings_panel.Controls.Add(this.againBtn);
+            this.settings_panel.Controls.Add(this.calculateBtn);
+            this.settings_panel.Controls.Add(this.generateBtn);
+            this.settings_panel.Location = new System.Drawing.Point(12, 27);
+            this.settings_panel.Name = "settings_panel";
+            this.settings_panel.Size = new System.Drawing.Size(700, 53);
+            this.settings_panel.TabIndex = 1;
             // 
             // label1
             // 
@@ -87,120 +80,149 @@
             this.label1.TabIndex = 3;
             this.label1.Text = "X";
             // 
-            // textBox2
+            // heightTB
             // 
-            this.textBox2.Location = new System.Drawing.Point(185, 17);
-            this.textBox2.MaxLength = 2;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 20);
-            this.textBox2.TabIndex = 2;
+            this.heightTB.Location = new System.Drawing.Point(185, 17);
+            this.heightTB.MaxLength = 2;
+            this.heightTB.Name = "heightTB";
+            this.heightTB.Size = new System.Drawing.Size(100, 20);
+            this.heightTB.TabIndex = 2;
             // 
-            // textBox1
+            // widthTB
             // 
-            this.textBox1.Location = new System.Drawing.Point(56, 17);
-            this.textBox1.MaxLength = 2;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 1;
+            this.widthTB.Location = new System.Drawing.Point(56, 17);
+            this.widthTB.MaxLength = 2;
+            this.widthTB.Name = "widthTB";
+            this.widthTB.Size = new System.Drawing.Size(100, 20);
+            this.widthTB.TabIndex = 1;
             // 
-            // button2
+            // againBtn
             // 
-            this.button2.FlatAppearance.BorderColor = System.Drawing.Color.Silver;
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Location = new System.Drawing.Point(0, 0);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(35, 35);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "15";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Visible = false;
+            this.againBtn.Location = new System.Drawing.Point(396, 7);
+            this.againBtn.Name = "againBtn";
+            this.againBtn.Size = new System.Drawing.Size(115, 39);
+            this.againBtn.TabIndex = 5;
+            this.againBtn.Text = "Заново";
+            this.againBtn.UseVisualStyleBackColor = true;
+            this.againBtn.Visible = false;
+            this.againBtn.Click += new System.EventHandler(this.againBtn_Click);
             // 
-            // panel2
+            // calculateBtn
             // 
-            this.panel2.AutoScroll = true;
-            this.panel2.Controls.Add(this.button3);
-            this.panel2.Controls.Add(this.button2);
-            this.panel2.Location = new System.Drawing.Point(12, 71);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(600, 540);
-            this.panel2.TabIndex = 2;
+            this.calculateBtn.Location = new System.Drawing.Point(396, 7);
+            this.calculateBtn.Name = "calculateBtn";
+            this.calculateBtn.Size = new System.Drawing.Size(115, 39);
+            this.calculateBtn.TabIndex = 4;
+            this.calculateBtn.Text = "Расчитать";
+            this.calculateBtn.UseVisualStyleBackColor = true;
+            this.calculateBtn.Visible = false;
+            this.calculateBtn.Click += new System.EventHandler(this.calculateBtn_Click);
             // 
-            // button3
+            // workplacePanel
             // 
-            this.button3.BackColor = System.Drawing.Color.Yellow;
-            this.button3.FlatAppearance.BorderColor = System.Drawing.Color.Silver;
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button3.Location = new System.Drawing.Point(35, 0);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(35, 35);
-            this.button3.TabIndex = 3;
-            this.button3.Text = "22";
-            this.button3.UseVisualStyleBackColor = false;
-            this.button3.Visible = false;
+            this.workplacePanel.AutoScroll = true;
+            this.workplacePanel.Location = new System.Drawing.Point(12, 86);
+            this.workplacePanel.Name = "workplacePanel";
+            this.workplacePanel.Size = new System.Drawing.Size(700, 520);
+            this.workplacePanel.TabIndex = 2;
             // 
-            // statusBar1
+            // statusBar
             // 
-            this.statusBar1.Location = new System.Drawing.Point(0, 619);
-            this.statusBar1.Name = "statusBar1";
-            this.statusBar1.Size = new System.Drawing.Size(624, 22);
-            this.statusBar1.TabIndex = 3;
+            this.statusBar.Location = new System.Drawing.Point(0, 619);
+            this.statusBar.Name = "statusBar";
+            this.statusBar.Size = new System.Drawing.Size(724, 22);
+            this.statusBar.TabIndex = 3;
             // 
-            // progressBar1
+            // progressBar
             // 
-            this.progressBar1.Location = new System.Drawing.Point(408, 619);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(160, 20);
-            this.progressBar1.TabIndex = 4;
-            this.progressBar1.Visible = false;
+            this.progressBar.Location = new System.Drawing.Point(535, 621);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(160, 20);
+            this.progressBar.TabIndex = 4;
+            this.progressBar.Visible = false;
             // 
-            // button5
+            // menuStrip1
             // 
-            this.button5.Location = new System.Drawing.Point(396, 7);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(115, 39);
-            this.button5.TabIndex = 5;
-            this.button5.Text = "Заново";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Visible = false;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.файлToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(724, 24);
+            this.menuStrip1.TabIndex = 5;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // файлToolStripMenuItem
+            // 
+            this.файлToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveToolStripMenuItem,
+            this.quitToolStripMenuItem});
+            this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
+            this.файлToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.файлToolStripMenuItem.Text = "Файл";
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Enabled = false;
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem.Text = "Сохранить в файл";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
+            // quitToolStripMenuItem
+            // 
+            this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.quitToolStripMenuItem.Text = "Выход";
+            this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(624, 641);
-            this.Controls.Add(this.progressBar1);
-            this.Controls.Add(this.statusBar1);
-            this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel1);
+            this.ClientSize = new System.Drawing.Size(724, 641);
+            this.Controls.Add(this.progressBar);
+            this.Controls.Add(this.statusBar);
+            this.Controls.Add(this.workplacePanel);
+            this.Controls.Add(this.settings_panel);
+            this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Wave alg";
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
+            this.settings_panel.ResumeLayout(false);
+            this.settings_panel.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button generateBtn;
+        private System.Windows.Forms.Panel settings_panel;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.StatusBar statusBar1;
-        private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.TextBox heightTB;
+        private System.Windows.Forms.TextBox widthTB;
+        private System.Windows.Forms.Panel workplacePanel;
+        private System.Windows.Forms.StatusBar statusBar;
+        private System.Windows.Forms.ProgressBar progressBar;
+        private System.Windows.Forms.Button calculateBtn;
+        private System.Windows.Forms.Button againBtn;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem файлToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
     }
 }
 
