@@ -1,5 +1,4 @@
-﻿//TODO: запретить возможность ввода лишних символов в поля ввода, прикрутить вывод в файл готовых строк
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace wave_alg
 {
@@ -24,7 +24,7 @@ namespace wave_alg
         int[,] matrix = new int[100, 100]; //матрица весов 
         Stack<Point> path = new Stack<Point>(); //путь
         bool counted = false; //флаг окончания расчета
-        string[,] outputMatrix = new string [100,100];//матрица для вывода в файл
+        string outputMatrix = ""; //матрица для вывода в файл
         string outputPath; //путь для вывода в файл
         public Form1()
         {
@@ -37,12 +37,15 @@ namespace wave_alg
         //клик на кнопку Генерировать
         private void generateBtn_Click(object sender, EventArgs e)
         {
-            if (widthTB.Text != "" && heightTB.Text != "")
+            if (widthTB.Text != "" && heightTB.Text != "" 
+                && Convert.ToInt32(widthTB.Text)!=0 && Convert.ToInt32(heightTB.Text) != 0)
             {
                 width = Convert.ToInt32(widthTB.Text);
                 height = Convert.ToInt32(heightTB.Text); //читаем размеры матрицы из texBox'ов 
-                                                         //инициализация матрицы
+                //инициализация матрицы
                 matrixInit();
+                start.X = -1; start.Y = -1;
+                end.X = -1; end.Y = -1;
                 // вычисление размеров кнопок
                 workplacePanel.Width = ((workplacePanel.Width / width) + 1) * width;
                 workplacePanel.Height = ((workplacePanel.Height / height) + 1) * height;
@@ -123,7 +126,7 @@ namespace wave_alg
                             button_array[(button.Location.Y / distance_y), (button.Location.X / distance_x)].BackColor = Color.Orange;//красим ячейку
                             end.X = button.Location.X / distance_x; end.Y = button.Location.Y / distance_y;//запоминаем конечную точку
                             statusBar.Text = "Укажите все препядствия и нажмите Расчитать";
-                            log();
+                            //log();
                         }
                         break;
                     default:
@@ -137,14 +140,14 @@ namespace wave_alg
                                 Console.WriteLine((button.Location.Y / distance_y) + " " + (button.Location.X / distance_x));
                                 button_array[(button.Location.Y / distance_y), (button.Location.X / distance_x)].BackColor = SystemColors.Control;//красим ячейку
                                 matrix[(button.Location.Y / distance_y), (button.Location.X / distance_x)] = -1; // снимаем пометку
-                                log();
+                                //log();
                             }
                             else
                             {
                                 Console.WriteLine((button.Location.Y / distance_y) + " " + (button.Location.X / distance_x));
                                 button_array[(button.Location.Y / distance_y), (button.Location.X / distance_x)].BackColor = Color.Black;//красим ячейку
                                 matrix[(button.Location.Y / distance_y), (button.Location.X / distance_x)] = int.MaxValue; // помечаем ячейку
-                                log();
+                                //log();
                             }
                         }
                         break;
@@ -311,21 +314,22 @@ namespace wave_alg
                 {
                     if (matrix[i, j] != int.MaxValue)
                     {
-                        outputMatrix[i, j] = matrix[i, j].ToString();
+                        outputMatrix = outputMatrix + matrix[i, j].ToString() + "\t";
                     }
                     else
                     {
-                        outputMatrix[i, j] = "inf";
+                        outputMatrix = outputMatrix+ "inf" + "\t";
                     }
                 }
+                outputMatrix = outputMatrix + "\n";
             }
-            for (int i = 0; i < height; i++)
+            using (FileStream fstream = new FileStream(@"../../output.txt", FileMode.Create))
             {
-                for (int j = 0; j < width; j++)
-                {
-                    Console.Write(outputMatrix[i, j] + " ");
-                }
-                Console.WriteLine();
+                // преобразуем строку в байты
+                Console.WriteLine("Матрица: \n" + outputMatrix + "Путь: \n" +  outputPath);
+                byte[] array = System.Text.Encoding.Default.GetBytes("Матрица: \n" + outputMatrix + "Путь: \n" + outputPath);
+                // запись массива байтов в файл
+                fstream.Write(array, 0, array.Length);
             }
         }
         //возврат к исходному состоянию
@@ -335,10 +339,8 @@ namespace wave_alg
             matrixInit();
             counted = false;
             counter = 0;
-            start.X=-1; start.Y = -1;
-            end.X = -1; end.Y = -1;
             outputPath = "";
-            Array.Clear(outputMatrix,0,outputMatrix.Length);
+            outputMatrix = "";
             saveToolStripMenuItem.Enabled = false;
             workplacePanel.Visible = false; //скроем панель, чтобы не было видно удаления кнопок
             //for (int x = 0; x < height; x++)
@@ -406,6 +408,24 @@ namespace wave_alg
         private void quitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void widthTB_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            char ch = e.KeyChar;
+            if (!Char.IsDigit(ch) && ch != 8) //Если символ, введенный с клавы - не цифра (IsDigit),
+            {
+                e.Handled = true;// то событие не обрабатывается. ch!=8 (8 - это Backspace)
+            }
+        }
+
+        private void heightTB_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            char ch = e.KeyChar;
+            if (!Char.IsDigit(ch) && ch != 8) //Если символ, введенный с клавы - не цифра (IsDigit),
+            {
+                e.Handled = true;// то событие не обрабатывается. ch!=8 (8 - это Backspace)
+            }
         }
     }
 }

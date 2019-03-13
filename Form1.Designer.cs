@@ -87,6 +87,7 @@
             this.heightTB.Name = "heightTB";
             this.heightTB.Size = new System.Drawing.Size(100, 20);
             this.heightTB.TabIndex = 2;
+            this.heightTB.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.heightTB_KeyPress);
             // 
             // widthTB
             // 
@@ -95,6 +96,7 @@
             this.widthTB.Name = "widthTB";
             this.widthTB.Size = new System.Drawing.Size(100, 20);
             this.widthTB.TabIndex = 1;
+            this.widthTB.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.widthTB_KeyPress);
             // 
             // againBtn
             // 
@@ -164,14 +166,14 @@
             // 
             this.saveToolStripMenuItem.Enabled = false;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.saveToolStripMenuItem.Text = "Сохранить в файл";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // quitToolStripMenuItem
             // 
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            this.quitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.quitToolStripMenuItem.Text = "Выход";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
             // 
