@@ -186,7 +186,7 @@ namespace wave_alg
                         {
                             if (matrix[i, j] == d) //если метка ячейки совпадает с фронтом волны
                             {
-                                wavePropagation(i, j);
+                                wavePropagation(new Point(i, j));
                                 emptyIteration = false;
                             }
                         }
@@ -239,25 +239,25 @@ namespace wave_alg
             }
         }
         //процедура пометки соседних ячеек
-        void wavePropagation(int i, int j)
+        void wavePropagation(Point currentPosition)
         {
             //последовательность значения не имеет, т.к. мы помечаем все соседние ячейки
-            if ((j - 1) >= 0 && matrix[i,j-1] == -1)
+            if ((currentPosition.Y - 1) >= 0 && matrix[currentPosition.X, currentPosition.Y - 1] == -1)
             //если такая ячейка существует и она не помечена
             {
-                matrix[i, j - 1] = matrix[i, j] + 1;
+                matrix[currentPosition.X, currentPosition.Y - 1] = matrix[currentPosition.X, currentPosition.Y] + 1;
             }
-            if ((i - 1) >= 0 && matrix[i-1, j] == -1)
+            if ((currentPosition.X - 1) >= 0 && matrix[currentPosition.X - 1, currentPosition.Y] == -1)
             {
-                matrix[i-1, j] = matrix[i, j] + 1;
+                matrix[currentPosition.X - 1, currentPosition.Y] = matrix[currentPosition.X, currentPosition.Y] + 1;
             }
-            if ((j + 1) < width && matrix[i, j + 1] == -1)
+            if ((currentPosition.Y + 1) < width && matrix[currentPosition.X, currentPosition.Y + 1] == -1)
             {
-                matrix[i, j + 1] = matrix[i, j] + 1;
+                matrix[currentPosition.X, currentPosition.Y + 1] = matrix[currentPosition.X, currentPosition.Y] + 1;
             }
-            if ((i+1) < height  && matrix[i+1, j] == -1)
+            if ((currentPosition.X + 1) < height && matrix[currentPosition.X + 1, currentPosition.Y] == -1)
             {
-                matrix[i+1, j] = matrix[i, j] + 1;
+                matrix[currentPosition.X + 1, currentPosition.Y] = matrix[currentPosition.X, currentPosition.Y] + 1;
             }
         }
         //функция просмотра соседних ячеек
