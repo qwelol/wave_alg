@@ -63,9 +63,9 @@
             this.settings_panel.Controls.Add(this.label1);
             this.settings_panel.Controls.Add(this.heightTB);
             this.settings_panel.Controls.Add(this.widthTB);
-            this.settings_panel.Controls.Add(this.againBtn);
             this.settings_panel.Controls.Add(this.calculateBtn);
             this.settings_panel.Controls.Add(this.generateBtn);
+            this.settings_panel.Controls.Add(this.againBtn);
             this.settings_panel.Location = new System.Drawing.Point(12, 27);
             this.settings_panel.Name = "settings_panel";
             this.settings_panel.Size = new System.Drawing.Size(700, 53);
@@ -115,7 +115,7 @@
             this.calculateBtn.Name = "calculateBtn";
             this.calculateBtn.Size = new System.Drawing.Size(115, 39);
             this.calculateBtn.TabIndex = 4;
-            this.calculateBtn.Text = "Расчитать";
+            this.calculateBtn.Text = "Рассчитать";
             this.calculateBtn.UseVisualStyleBackColor = true;
             this.calculateBtn.Visible = false;
             this.calculateBtn.Click += new System.EventHandler(this.calculateBtn_Click);

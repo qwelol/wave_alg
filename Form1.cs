@@ -125,7 +125,7 @@ namespace wave_alg
                             Console.WriteLine((button.Location.Y / distance_y) + " " + (button.Location.X / distance_x));
                             button_array[(button.Location.Y / distance_y), (button.Location.X / distance_x)].BackColor = Color.Orange;//красим ячейку
                             end.X = button.Location.X / distance_x; end.Y = button.Location.Y / distance_y;//запоминаем конечную точку
-                            statusBar.Text = "Укажите все препядствия и нажмите Расчитать";
+                            statusBar.Text = "Укажите все препядствия и нажмите Рассчитать";
                             //log();
                         }
                         break;
@@ -268,15 +268,6 @@ namespace wave_alg
             Console.WriteLine("Current" + currentPosition);
             newPosition.X = currentPosition.X;newPosition.Y = currentPosition.Y;
             //если такая ячейка существует, она заполнена и ее значение меньше текущего на 1
-            if ((currentPosition.X-1 >= 0) && 
-                (matrix[currentPosition.Y, currentPosition.X] - matrix[currentPosition.Y, (currentPosition.X - 1)]) == 1)//влево
-                
-            {
-                newPosition.X = currentPosition.X - 1;
-                Console.WriteLine("Current" + currentPosition);
-                Console.WriteLine("Left"+newPosition);
-                return newPosition;
-            }
             if ((currentPosition.Y - 1 >= 0) && 
             (matrix[currentPosition.Y, currentPosition.X] - matrix[(currentPosition.Y - 1), currentPosition.X]) == 1)//вверх
             {
@@ -285,12 +276,13 @@ namespace wave_alg
                 Console.WriteLine("Up" + newPosition);
                 return newPosition;
             }
-            if ((currentPosition.X+1 <= width) && 
-            (matrix[currentPosition.Y, currentPosition.X] - matrix[currentPosition.Y, (currentPosition.X + 1)]) == 1)//вправо
+            if ((currentPosition.X - 1 >= 0) &&
+                (matrix[currentPosition.Y, currentPosition.X] - matrix[currentPosition.Y, (currentPosition.X - 1)]) == 1)//влево
+
             {
-                newPosition.X = currentPosition.X + 1;
+                newPosition.X = currentPosition.X - 1;
                 Console.WriteLine("Current" + currentPosition);
-                Console.WriteLine("Right" + newPosition);
+                Console.WriteLine("Left" + newPosition);
                 return newPosition;
             }
             if ((currentPosition.Y+1 <= height) && 
@@ -301,12 +293,21 @@ namespace wave_alg
                 Console.WriteLine("Down" + newPosition);
                 return newPosition;
             }
+            if ((currentPosition.X + 1 <= width) &&
+            (matrix[currentPosition.Y, currentPosition.X] - matrix[currentPosition.Y, (currentPosition.X + 1)]) == 1)//вправо
+            {
+                newPosition.X = currentPosition.X + 1;
+                Console.WriteLine("Current" + currentPosition);
+                Console.WriteLine("Right" + newPosition);
+                return newPosition;
+            }
             Console.WriteLine("alarm");
             return newPosition;
         }
         //сохранение в файл
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            outputMatrix = "";
             //нужно записать матрицу в строку, потом вывести ее и outputPath в текстовый файл
             for (int i = 0; i < height; i++)
             {
@@ -323,11 +324,12 @@ namespace wave_alg
                 }
                 outputMatrix = outputMatrix + "\n";
             }
-            using (FileStream fstream = new FileStream(@"../../output.txt", FileMode.Create))
+            using (FileStream fstream = new FileStream(@"output.txt", FileMode.Create))
             {
                 // преобразуем строку в байты
-                Console.WriteLine("Матрица: \n" + outputMatrix + "Путь: \n" +  outputPath);
-                byte[] array = System.Text.Encoding.Default.GetBytes("Матрица: \n" + outputMatrix + "Путь: \n" + outputPath);
+                Console.WriteLine("Матрица: \n" + outputMatrix + "Путь: \n" +  outputPath + "\n Длина пути:" + matrix[end.Y,end.X].ToString());
+                byte[] array = System.Text.Encoding.Default.GetBytes("Матрица: \n" + outputMatrix + "Путь: \n" + outputPath
+                    + "\n Длина пути:" + matrix[end.Y, end.X].ToString());
                 // запись массива байтов в файл
                 fstream.Write(array, 0, array.Length);
             }
@@ -366,7 +368,7 @@ namespace wave_alg
             heightTB.Enabled = true;
             //делаем снова доступной кнопку генерации 
             generateBtn.Visible = true;
-            statusBar.Text = "Выберите стартовую ячейку";
+            statusBar.Text = "Укажите размеры платы";
         }
 
         //функция сравнения 2 точек
