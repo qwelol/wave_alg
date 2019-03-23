@@ -81,6 +81,10 @@ namespace wave_alg
         private void create_Cell(int x, int y)
         {
             int fontSize = (distance_y / 4)-1;
+            if (fontSize <= 0)
+            {
+                fontSize = 1;
+            }
             Button button = new Button();
             button.Location = new Point(x, y); //позиция кнопки 
             button.Size = new Size(distance_x, distance_y); //размеры
